@@ -1,6 +1,7 @@
 package wiremock_POC_Try;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
@@ -15,8 +16,9 @@ public class stubbing {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody("{\"currently\":{\"windSpeed\":12.34}}")));
-        wiremockserver.stubFor(post(urlEqualTo("/response-transform-with-params")).willReturn(
-                aResponse()
+        wiremockserver.stubFor(get(urlPathMatching("/response-transform-with-params"))
+                .withQueryParam("emp_no",matching( "..*" ))
+                .willReturn(aResponse()
                         .withTransformerParameter("name", "John")
                         .withTransformerParameter("number", 66)
                         .withTransformerParameter("flag", true)
